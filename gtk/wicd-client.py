@@ -162,7 +162,6 @@ class TrayIcon(object):
             self.tr.toggle_wicd_gui()
         self.icon_info = self.TrayConnectionInfo(self, self.tr, animate)
         self.tr.icon_info = self.icon_info
-        print 'displaytray %s' % displaytray
         self.tr.visible(displaytray)
 
     def is_embedded(self):
