@@ -1023,6 +1023,16 @@ class WirelessDaemon(dbus.service.Object, object):
     def _sync_scan(self):
         """ Run a scan and send a signal when its finished. """
         scan = self.wifi.Scan(str(self.hidden_essid))
+
+        def comp(x, y):
+            if self.daemon.GetSignalDisplayType() == 0:
+                key = 'quality'
+            else:
+                key = 'strength'
+            return cmp(x[key], y[key])
+        #scan in reverse order only for quality, for dBm we want the "highest" on top
+        scan.sort(cmp=comp, reverse=not self.daemon.GetSignalDisplayType())
+
         self.LastScan = scan
         if self.debug_mode:
             print 'scanning done'

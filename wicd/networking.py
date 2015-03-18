@@ -637,13 +637,6 @@ class Wireless(Controller):
         A list of available networks sorted by strength.
 
         """
-        def comp(x, y):
-            """ Custom sorting function. """
-            if 'quality' in x:
-                key = 'quality'
-            else:
-                key = 'strength'
-            return cmp(x[key], y[key])
                 
         if not self.wiface:
             return []
@@ -663,8 +656,6 @@ class Wireless(Controller):
             time.sleep(1)
 
         aps = wiface.GetNetworks(essid)
-        aps.sort(cmp=comp, reverse=True)
-        
         return aps
 
     def Connect(self, network, debug=False):
