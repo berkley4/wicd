@@ -52,13 +52,13 @@ try:
         'org.wicd.daemon.config'
     )
 except dbus.DBusException:
-    print 'Error: Could not connect to the daemon. ' + \
-        'Please make sure it is running.'
+    sys.stderr.write('Error: Could not connect to the daemon. ' + \
+        'Please make sure it is running.\n')
     sys.exit(3)
 
 if not daemon:
-    print 'Error connecting to wicd via D-Bus. ' + \
-        'Please make sure the wicd service is running.'
+    sys.stderr.write('Error connecting to wicd via D-Bus. ' + \
+        'Please make sure the wicd service is running.\n')
     sys.exit(3)
 
 parser = optparse.OptionParser()
@@ -88,8 +88,8 @@ options, arguments = parser.parse_args()
 op_performed = False
 
 if not (options.wireless or options.wired) and not options.status:
-    print "Please use --wireless or --wired to specify " + \
-    "the type of connection to operate on."
+    sys.stderr.write('Please use --wireless or --wired to specify ' + \
+    'the type of connection to operate on.\n')
 
 if options.status:
     status, info = daemon.GetConnectionStatus()
@@ -132,7 +132,7 @@ def is_valid_wireless_network_id(network_id):
     """ Check if it's a valid wireless network. '"""
     if not (network_id >= 0 \
             and network_id < wireless.GetNumberOfNetworks()):
-        print 'Invalid wireless network identifier.'
+        sys.stderr.write('Invalid wireless network identifier.\n')
         sys.exit(1)
 
 def is_valid_wired_network_id(network_id):
@@ -140,13 +140,14 @@ def is_valid_wired_network_id(network_id):
     num = len(wired.GetWiredProfileList())
     if not (network_id < num and \
             network_id >= 0):
-        print 'Invalid wired network identifier.'
+        sys.stderr.write('Invalid wired network identifier.\n')
         sys.exit(4)
 
 def is_valid_wired_network_profile(profile_name):
     """ Check if it's a valid wired network profile. '"""
+
     if not profile_name in wired.GetWiredProfileList():
-        print 'Profile of that name does not exist.'
+        sys.stderr.write('Profile of that name does not exist.\n')
         sys.exit(5)
 
 if options.scan and options.wireless:
