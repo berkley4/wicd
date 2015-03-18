@@ -10,11 +10,10 @@ class TrayIcon() -- Parent class of TrayIconGUI and IconConnectionInfo.
     class TrayConnectionInfo() -- Child class of TrayIcon which provides
         and updates connection status.
     class TrayIconGUI() -- Child class of TrayIcon which implements the tray.
-        icon itself.  Parent class of StatusTrayIconGUI and EggTrayIconGUI.
+        icon itself.  Parent class of StatusTrayIconGUI.
     class IndicatorTrayIconGUI() -- Implements the tray icon using appindicator.Indicator.
     class StatusTrayIconGUI() -- Implements the tray icon using a
                                  gtk.StatusIcon.
-    class EggTrayIconGUI() -- Implements the tray icon using egg.trayicon.
     def usage() -- Prints usage information.
     def main() -- Runs the wicd frontend main loop.
 
@@ -73,16 +72,9 @@ from guiutil import error, can_use_notify
 from wicd.translations import _
 
 ICON_AVAIL = True
-USE_EGG = False
-# Import egg.trayicon if we're using an older gtk version
 if not hasattr(gtk, "StatusIcon"):
-    try:
-        import egg.trayicon
-        USE_EGG = True
-    except ImportError:
-        print 'Unable to load tray icon: Missing both egg.trayicon and ' + \
-            'gtk.StatusIcon modules.'
-        ICON_AVAIL = False
+    print 'Unable to load tray icon: Missing gtk.StatusIcon module.'
+    ICON_AVAIL = False
 
 misc.RenameProcess("wicd-client")
 
@@ -154,8 +146,6 @@ class TrayIcon(object):
 
         if USE_APP_INDICATOR:
             self.tr = self.IndicatorTrayIconGUI(self)
-        elif USE_EGG:
-            self.tr = self.EggTrayIconGUI(self)
         else:
             self.tr = self.StatusTrayIconGUI(self)
         if displayapp:
@@ -165,10 +155,7 @@ class TrayIcon(object):
         self.tr.visible(displaytray)
 
     def is_embedded(self):
-        if USE_EGG:
-            raise NotImplementedError()
-        else:
-            return self.tr.is_embedded()  # pylint: disable-msg=E1103
+        return self.tr.is_embedded()  # pylint: disable-msg=E1103
 
     def get_bandwidth_bytes(self):
         """ Gets the amount of byte sent sine the last time I checked """
@@ -495,8 +482,8 @@ class TrayIcon(object):
     class TrayIconGUI(object):
         """ Base Tray Icon UI class.
 
-        Implements methods and variables used by both egg/StatusIcon
-        tray icons.
+        Implements methods and variables used by both StatusIcon
+        and IndicatorTrayIconGUI tray icons.
 
         """
         def __init__(self, parent):
@@ -867,70 +854,9 @@ TX:'''))
                 self.gui_win.exit()
                 return True
 
-    if USE_EGG:
-        class EggTrayIconGUI(TrayIconGUI):
-            """ Tray Icon for gtk < 2.10.
-
-            Uses the deprecated egg.trayicon module to implement the tray icon.
-            Since it relies on a deprecated module, this class is only used
-            for machines running versions of GTK < 2.10.
-
-            """
-            def __init__(self, parent):
-                """Initializes the tray icon"""
-                TrayIcon.TrayIconGUI.__init__(self, parent)
-                self.tooltip = gtk.Tooltips()
-                self.eb = gtk.EventBox()
-                self.tray = egg.trayicon.TrayIcon("WicdTrayIcon")
-                self.pic = gtk.Image()
-                self.tooltip.set_tip(self.eb, "Initializing wicd...")
-                self.pic.set_from_name('no-signal')
-
-                self.eb.connect('button_press_event', self.tray_clicked)
-                self.eb.add(self.pic)
-                self.tray.add(self.eb)
-                self.tray.show_all()
-
-            def tray_clicked(self, widget, event):
-                """ Handles tray mouse click events. """
-                if event.button == 1:
-                    self.toggle_wicd_gui()
-                elif event.button == 3:
-                    self.init_network_menu()
-                    self.menu.popup(None, None, None, event.button, event.time)
-
-            def set_from_file(self, val=None):
-                """ Calls set_from_file on the gtk.Image for the tray icon. """
-                self.pic.set_from_file(
-                    os.path.join(
-                        wpath.images, 'hicolor/22x22/status/%s.png' % val
-                    )
-                )
-
-            def set_tooltip(self, val):
-                """ Set the tooltip for this tray icon.
-
-                Sets the tooltip for the gtk.ToolTips associated with this
-                tray icon.
-
-                """
-                self.tooltip.set_tip(self.eb, val)
-
-            def visible(self, val):
-                """ Set if the icon is visible or not.
-
-                If val is True, makes the icon visible, if val is False,
-                hides the tray icon.
-
-                """
-                if val:
-                    self.tray.show_all()
-                else:
-                    self.tray.hide_all()
-
     if hasattr(gtk, "StatusIcon"):
         class StatusTrayIconGUI(gtk.StatusIcon, TrayIconGUI):
-            """ Class for creating the wicd tray icon on gtk > 2.10.
+            """ Class for creating the wicd tray icon on gtk
 
             Uses gtk.StatusIcon to implement a tray icon.
 
