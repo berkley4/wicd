@@ -231,6 +231,13 @@ class appGui(object):
         self.status_bar = self.wTree.get_object("statusbar")
         menu = self.wTree.get_object("menu1")
 
+        if wireless.GetRfKillEnabled():
+            self.rfkill_button.set_stock_id(gtk.STOCK_MEDIA_PLAY)
+            self.rfkill_button.set_label(_('Switch On Wi-Fi'))
+        else:
+            self.rfkill_button.set_stock_id(gtk.STOCK_MEDIA_STOP)
+            self.rfkill_button.set_label(_('Switch Off Wi-Fi'))
+
         self.status_area.hide_all()
 
         self.window.set_icon_name('wicd-gtk')
@@ -731,7 +738,7 @@ class appGui(object):
                                                 x, tempnet)
         else:
             instruct_label.hide()
-            if wireless.GetKillSwitchEnabled():
+            if wireless.GetRfKillEnabled():
                 label = gtk.Label(_('Wireless Kill Switch Enabled') + ".")
             else:
                 label = gtk.Label(_('No wireless networks found.'))

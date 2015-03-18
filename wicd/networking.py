@@ -856,7 +856,7 @@ class Wireless(Controller):
         Returns:
         True if rfkill (soft-)switch is enabled.
         """
-        cmd = 'rfkill list'
+        cmd = 'rfkill list wifi'
         rfkill_out = misc.Run(cmd)
         soft_blocks = filter(lambda x: x.startswith('Soft'),
             rfkill_out.split('\t'))
