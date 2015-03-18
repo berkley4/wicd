@@ -1,8 +1,9 @@
 name = PEAP with GTC
 author = Adam Blackburn
-version = 2
+version = 3
 require identity *Identity password *Password
 protected password *Password
+optional ca_cert *Path_to_CA_Cert
 -----
 ctrl_interface=/var/run/wpa_supplicant
 network={
@@ -13,4 +14,5 @@ network={
 	eap=PEAP
 	identity="$_IDENTITY"
 	password="$_PASSWORD"
+	ca_cert="$_CA_CERT"
 }
