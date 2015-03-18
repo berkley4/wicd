@@ -1012,11 +1012,11 @@ TX:'''))
                 self.init_network_menu()
                 wireless.Scan(False)
 
-            def set_from_file(self, path=None):
+            def set_from_name(self, name=None):
                 """ Sets a new tray icon picture. """
-                if path != self.current_icon_path:
-                    self.current_icon_path = path
-                    self.ind.set_icon(path)
+                if name != self.current_icon_name:
+                    self.current_icon_name = name
+                    self.ind.set_icon(wpath.images + name + ".png")
 
             def visible(self, val):
                 """ Set if the icon is visible or not.
