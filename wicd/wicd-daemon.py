@@ -1901,14 +1901,14 @@ def main(argv):
                 os.chmod(logpath, int(wpath.log_perms, 8))
             except OSError:
                 print 'unable to chmod log file to %s' % wpath.log_perms
-            group_name = "the selected user group"
+
             try:
-                group = grp.getgrnam(wpath.log_group)
-                group_name = group[2]
                 if wpath.log_group:
-                    os.chown(logpath, 0, group_name)
-            except:
-                print 'unable to chown log file to %s.' % group_name
+                    import grp
+                    group = grp.getgrnam(wpath.log_group)
+                    os.chown(logpath, 0, group[2])
+            except OSError:
+                print 'unable to chown log file to %s' % group[2]
 
     if redirect_stdout:
         sys.stdout = output
