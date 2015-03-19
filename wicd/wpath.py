@@ -51,7 +51,6 @@ daemon = '/usr/share/wicd/daemon/'
 curses = '/usr/share/wicd/curses/'
 gtk = '/usr/share/wicd/gtk/'
 cli = '/usr/share/wicd/cli/'
-gnome_shell_extensions = '/usr/share/gnome-shell/extensions/'
 translations = '/usr/share/locale/'
 icons = '/usr/share/icons/hicolor/'
 pixmaps = '/usr/share/pixmaps/'
@@ -87,7 +86,6 @@ no_install_docs = False
 no_install_gtk = False
 no_install_ncurses = False
 no_install_cli = False
-no_install_gnome_shell_extensions = False
 no_use_notifications = False
 
 def chdir(f):
