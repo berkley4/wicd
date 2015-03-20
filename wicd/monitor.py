@@ -301,12 +301,12 @@ class ConnectionStatus(object):
                                          self.signal_changed)):
             daemon.EmitStatusChanged(state, info)
 
-        if (state != self.last_state) and (state == misc.NOT_CONNECTED) and \
-            (not daemon.GetForcedDisconnect()):
-            daemon.Disconnect()
+#        if (state != self.last_state) and (state == misc.NOT_CONNECTED) and \
+#            (not daemon.GetForcedDisconnect()):
+#            daemon.Disconnect()
             # Disconnect() sets forced disconnect = True
             # so we'll revert that
-            daemon.SetForcedDisconnect(False)
+#            daemon.SetForcedDisconnect(False)
         self.last_state = state
         return True
 
