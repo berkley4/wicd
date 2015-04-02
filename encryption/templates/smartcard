@@ -1,0 +1,28 @@
+name = Smartcard
+author = Sergey Gridnev
+version = 2
+require path_to_engine *Path_To_Engine path_to_module *Path_To_Module identity *Identity key_id *Private_Key_ID_Path pin *PIN
+protected pin *PIN
+optional client_cert *Client_Certificate_Path client_cert_id *Client_Certificate_ID ca_cert *CA_Certificate_Path ca_cert_id *CA_Certificate_ID
+-----
+pkcs11_engine_path=$_PATH_TO_ENGINE
+pkcs11_module_path=$_PATH_TO_MODULE
+ctrl_interface=/var/run/wpa_supplicant
+
+network={
+   ssid="$_ESSID"
+   key_mgmt=WPA-EAP
+   eap=TLS
+   identity="$_IDENTITY"
+   engine=1
+   engine_id="pkcs11"
+
+   cert_id="$_CLIENT_CERT_ID"
+   ca_cert_id="$_CA_CERT_ID"
+
+   client_cert="$_CLIENT_CERT"
+   ca_cert="$_CA_CERT"
+
+   key_id="$_KEY_ID"
+   pin="$_PIN"
+}
