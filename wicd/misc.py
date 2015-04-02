@@ -320,7 +320,13 @@ def ParseEncryption(network):
                             elif cur_val == 'KEY_INDEX':
                                 rep_val = '0'
                         if rep_val:
-                            line = line.replace("$_%s" % cur_val, str(rep_val))
+                            if cur_val[0] == 'MODE':
+                                mode = 0
+                                if str(rep_val) == 'Ad-Hoc':
+                                    mode = 1
+                                line = line.replace("$_MODE", str(mode))
+                            else:
+                                line = line.replace("$_%s" % cur_val, str(rep_val))
                             config_file = ''.join([config_file, line])
                         else:
                             print "Ignoring template line: '%s'" % line

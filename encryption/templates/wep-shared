@@ -14,4 +14,5 @@ network={
        wep_key$_KEY_INDEX=$_KEY
        wep_tx_keyidx=$_KEY_INDEX
        priority=5
+       mode=$_MODE
 }
