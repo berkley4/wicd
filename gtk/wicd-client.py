@@ -897,15 +897,15 @@ TX:'''))
         class IndicatorTrayIconGUI(gtk.StatusIcon, TrayIconGUI):
             """ Class for creating the wicd AppIndicator.
             This is required on recent versions of Unity (>=13.04).
-            
+
             Uses appindicator.Indicator to implement a tray icon.
-            
+
             """
             def __init__(self, parent):
                 TrayIcon.TrayIconGUI.__init__(self, parent)
                 self.ind = appindicator.Indicator(
-                    "wicd", "", appindicator.CATEGORY_SYSTEM_SERVICES)
-                self.ind.set_icon(wpath.images + "no-signal.png")
+                    "wicd", "wicd-gtk", appindicator.CATEGORY_SYSTEM_SERVICES, wpath.images)
+                self.current_icon_name = ''
 
                 # Rescaning when hovering over the net_menu doesn't work.
                 # (AFAICT, AppIndicator menus don't report PRELIGHT status.)
@@ -942,6 +942,12 @@ TX:'''))
                 if path != self.current_icon_path:
                     self.current_icon_path = path
                     self.ind.set_icon(path)
+
+            def set_from_name(self, name=None):
+                """ Sets a new tray icon picture. """
+                if name != self.current_icon_name:
+                    self.current_icon_name = name
+                    self.ind.set_icon(name)
 
             def visible(self, val):
                 """ Set if the icon is visible or not.
