@@ -8,6 +8,7 @@ optional ca_cert *Path_to_CA_Cert
 ctrl_interface=/var/run/wpa_supplicant
 network={
 	ssid="$_ESSID"
+	bssid=$_BSSID
 	proto=RSN
 	key_mgmt=WPA-EAP
 	pairwise=CCMP
