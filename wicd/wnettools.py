@@ -685,16 +685,17 @@ class BaseInterface(object):
                         misc.PUMP : self._parse_pump,
                         misc.UDHCPC : self._parse_udhcpc,
                       }
-        
+
         DHCP_CLIENT = self._get_dhcp_command()
         if DHCP_CLIENT in client_dict:
             ret = client_dict[DHCP_CLIENT](pipe)
         else:
             print "ERROR: no dhcp client found"
             ret = None
-        self.dhcp_object.wait()
+        if self.dhcp_object:
+            self.dhcp_object.wait()
         return ret
-        
+
     @neediface(False)
     def ReleaseDHCP(self):
         """ Release the DHCP lease for this interface. """
